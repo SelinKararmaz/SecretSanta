@@ -14,7 +14,6 @@ socket.on('reloadPage', function () {
 document.addEventListener("DOMContentLoaded", function() {
     let wheel = document.querySelector('.wheel');
     let spinBtn = document.querySelector('.spinBtn');
-    var rect = wheel.getBoundingClientRect();
   
     let selin = document.querySelector('#selin');
     let yavuz = document.querySelector('#yavuz');
@@ -34,14 +33,16 @@ document.addEventListener("DOMContentLoaded", function() {
     // Initialize chart with 4 members
     changeChart(numbers);
 
-    console.log(rect.top, rect.right, rect.bottom, rect.left);
-
     // Triggers spinWheel
     spinBtn.onclick = function(){ 
         socket.emit('spinWheel');
         console.log("yes");
     };
-    console.log(rect.left + " " + rect.right);
+
+    var rect = wheel.getBoundingClientRect();
+
+    const bottom = (rect.bottom + rect.top)/2
+    console.log(rect.right + " " + rect.left + " " + rect.bottom + " " + rect.top);
 
     // When updateWheel event is triggered, rotates wheel, 
     // choses member, updates wheel
@@ -56,10 +57,10 @@ document.addEventListener("DOMContentLoaded", function() {
     
           for(var person of family){
             var pos = person.getBoundingClientRect();
-            console.log( pos.right + " " + pos.left + " " + person.id);
+            console.log( pos.right + " " + pos.left + " " + pos.bottom + " " + pos.top + " " + person.id);
 
             // Gets the person that is position on top
-            if(pos.left == rect.left)
+            if(Math.floor(bottom) == Math.floor(pos.bottom)){
               console.log(choosenPerson);
               
               // Remove person from front end

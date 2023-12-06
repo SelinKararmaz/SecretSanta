@@ -15,8 +15,8 @@ body{
 
 .container{
 	position: relative;
-	width: 400px;
-	height: 400px;
+	width: 20em;
+	height: 20em;
 	display: flex;
 	justify-content: center;
 	align-items: center;
