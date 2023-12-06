@@ -1,5 +1,8 @@
 const socket = io({ reconnection: false });
 
+// members joined
+let members = {};
+
 // Displays players on front end
 socket.on('updatePlayers', function(players) {
     console.log(players);
@@ -7,8 +10,12 @@ socket.on('updatePlayers', function(players) {
 })
 
 // Reloads the page so that the chart stays the same when user disconnects
-socket.on('reloadPage', function () {
-    window.location.reload();
+window.addEventListener('beforeunload', () => {
+  socket.emit('reloadPage');
+});
+// Listen for reloadAllPages event
+socket.on('reloadAllPages', () => {
+  location.reload(true); // Reload the page, forcing a full reload
 });
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -27,16 +34,16 @@ document.addEventListener("DOMContentLoaded", function() {
     // Chosen member on the chart
     let choosenPerson = null;
 
-    // members joined
-    let members = {};
-
     // Initialize chart with 4 members
     changeChart(numbers);
 
     // Triggers spinWheel
     spinBtn.onclick = function(){ 
-        socket.emit('spinWheel');
-        console.log("yes");
+        if(Object.keys(members).length != 4){
+            window.alert('The number of players is not 4!');
+        }else{
+            socket.emit('spinWheel');
+        }
     };
 
     var rect = wheel.getBoundingClientRect();
@@ -85,12 +92,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // Draws the chart according to the member count
 function changeChart(numbers){
-    let numberOfElements = numbers.length;
-    let angleStep = 360 / numberOfElements;
-  
-    numbers.forEach((number, index) => {
-      let rotationAngle = index * angleStep;
-      number.style.transform = `rotate(${rotationAngle}deg)`;
-    });
+  let numberOfElements = numbers.length;
+  let angleStep = 360 / numberOfElements;
+
+  numbers.forEach((number, index) => {
+    let rotationAngle = index * angleStep;
+    number.style.transform = `rotate(${rotationAngle}deg)`;
+  });
 }
   
