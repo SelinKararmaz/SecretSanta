@@ -17,7 +17,7 @@ app.use(express.static(__dirname));
 io.on('connection', (socket) => {
   console.log('a user connected');
 
-  players[socket.id] = {assignedPerson: 0, clicked: false};
+  players[socket.id] = {assignedPerson: 0, clicked: false, username: null};
 
   io.emit('updatePlayers', players);
 
@@ -40,8 +40,14 @@ io.on('connection', (socket) => {
     io.emit('updatePlayers', players); 
   });
 
-  socket.on('playerClicked', (playerSocketId) =>{
+  socket.on('playerClicked', (playerSocketId, playerUsername) =>{
     players[playerSocketId].clicked = true;
+    players[playerSocketId].username = playerUsername;
+    io.emit('updatePlayers', players);
+    io.emit('noteClickedPerson', playerSocketId);
+  })
+  socket.on('assignPerson', (person, personToBeAssigned) =>{
+    players[person].assignedPerson = personToBeAssigned;
     io.emit('updatePlayers', players);
   })
 });
