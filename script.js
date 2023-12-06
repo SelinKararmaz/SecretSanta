@@ -41,12 +41,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Triggers spinWheel
     spinBtn.onclick = function(){ 
-      console.log(socket.id + " " + members[socket.id]);
       if(Object.keys(members).length != 3){
         window.alert('The number of players is not 4!');
-      }else if(members[socket.id] != 0){
+      }else if(members[socket.id].clicked){
         window.alert('You already spinned the wheel!');
       }else{
+        socket.emit("playerClicked", socket.id);
         socket.emit('spinWheel');
       }
     };

@@ -17,7 +17,7 @@ app.use(express.static(__dirname));
 io.on('connection', (socket) => {
   console.log('a user connected');
 
-  players[socket.id] = 0;
+  players[socket.id] = {assignedPerson: 0, clicked: false};
 
   io.emit('updatePlayers', players);
 
@@ -39,6 +39,11 @@ io.on('connection', (socket) => {
     // Updates the player list on both the front end and back end of
     io.emit('updatePlayers', players); 
   });
+
+  socket.on('playerClicked', (playerSocketId) =>{
+    players[playerSocketId].clicked = true;
+    io.emit('updatePlayers', players);
+  })
 });
 
 server.listen(3000, () => {
