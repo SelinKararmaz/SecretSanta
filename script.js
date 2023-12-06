@@ -5,8 +5,8 @@ let members = {};
 
 // Displays players on front end
 socket.on('updatePlayers', function(players) {
-    console.log(players);
-    members = players;
+  console.log(players);
+  members = players;
 })
 
 // Reloads the page so that the chart stays the same when user disconnects
@@ -26,6 +26,8 @@ document.addEventListener("DOMContentLoaded", function() {
     let yavuz = document.querySelector('#yavuz');
     let alper = document.querySelector('#alper');
     let keziban = document.querySelector('#keziban');
+
+    var bottom = 0;
   
     let family = [selin, yavuz, alper, keziban];
     // The family members on the chart
@@ -39,21 +41,30 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Triggers spinWheel
     spinBtn.onclick = function(){ 
-        if(Object.keys(members).length != 4){
-            window.alert('The number of players is not 4!');
-        }else{
-            socket.emit('spinWheel');
-        }
+      console.log(socket.id + " " + members[socket.id]);
+      if(Object.keys(members).length != 3){
+        window.alert('The number of players is not 4!');
+      }else if(members[socket.id] != 0){
+        window.alert('You already spinned the wheel!');
+      }else{
+        socket.emit('spinWheel');
+      }
     };
 
-    var rect = wheel.getBoundingClientRect();
+    setTimeout(getWheelCoordinates, 2000);
 
-    const bottom = (rect.bottom + rect.top)/2
-    console.log(rect.right + " " + rect.left + " " + rect.bottom + " " + rect.top);
+    function getWheelCoordinates(){
+      rect = wheel.getBoundingClientRect();
+      console.log(rect.left);
+      bottom = (rect.bottom + rect.top)/2
+    }
 
     // When updateWheel event is triggered, rotates wheel, 
     // choses member, updates wheel
     socket.on('updateWheel', function(speed, factor) {
+      if(bottom == 0){
+        return;
+      }
 
         // Rotate with given speed
         wheel.style.transform = "rotate(" + speed + "deg)";
@@ -65,7 +76,6 @@ document.addEventListener("DOMContentLoaded", function() {
           for(var person of family){
             var pos = person.getBoundingClientRect();
             console.log( pos.right + " " + pos.left + " " + pos.bottom + " " + pos.top + " " + person.id);
-
             // Gets the person that is position on top
             if(Math.floor(bottom) == Math.floor(pos.bottom)){
               console.log(choosenPerson);

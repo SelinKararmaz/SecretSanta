@@ -17,7 +17,7 @@ app.use(express.static(__dirname));
 io.on('connection', (socket) => {
   console.log('a user connected');
 
-  players[socket.id] = "no one";
+  players[socket.id] = 0;
 
   io.emit('updatePlayers', players);
 
