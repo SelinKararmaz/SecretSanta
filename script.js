@@ -24,13 +24,6 @@ document.addEventListener("DOMContentLoaded", function() {
   let wheel = document.querySelector('.wheel');
   let spinBtn = document.querySelector('.spinBtn');
   let candy = document.querySelector('.candy');
-  candy.addEventListener('mouseover', function() {
-    letItSnow(1);
-  });
-  candy.addEventListener('mouseout', function() {
-    console.log("yes");
-    letItSnow(0);
-  });
 
   // Players displayed on left
   let playerContainer = document.querySelector('.players');
@@ -49,14 +42,49 @@ document.addEventListener("DOMContentLoaded", function() {
   let family = {"selin":document.querySelector('#selin'), "yavuz":document.querySelector('#yavuz'),"alper":document.querySelector('#alper'),"keziban":document.querySelector('#keziban') };
 
   var audio = document.getElementById("music");
-  var source = document.getElementById('musicSource');
+  var musicSource = document.getElementById('musicSource');
   let snowContainer = document.getElementById("fullPageDiv");
 
   var bottom = 0;
   var spinning = false;
+  var bgMusic = false;
 
   // Initialize chart with 4 members
   changeChart(numbers);
+
+  candy.addEventListener('mouseover', function() {
+    letItSnow(1);
+  });
+  candy.addEventListener('mouseout', function() {
+    letItSnow(0);
+    graduallyPauseAudio();
+  });
+  candy.addEventListener('click', function() {
+    if(bgMusic) changeMusic("eyvaheyvah");
+  });
+  function changeMusic(person){
+    musicSource.src = "Music/" +person+".mp3";
+    // Load the new source
+    audio.load();
+    audio.play();
+  }
+  function graduallyPauseAudio() {
+    var fadeOutInterval = setInterval(function() {
+        if (audio.volume > 0.1) {
+            audio.volume -= 0.1;  // decrease volume gradually
+        } else {
+            audio.volume = 0;
+            audio.pause();
+            audio.volume = 1;
+            clearInterval(fadeOutInterval);
+        }
+    }, 200);  // adjust the interval as needed
+}
+  
+  function letItSnow(snow){
+    snowContainer.style.opacity = snow;
+    bgMusic = snow;
+  }
 
   // Chosen member on the chart
   let choosenPerson = null;
@@ -146,7 +174,7 @@ document.addEventListener("DOMContentLoaded", function() {
       // Update wheel
       changeChart(numbers);
   
-      changeMusic(audio, musicSource, person.id);
+      changeMusic(person.id);
   
       changeImage(chosenPlayerImage, person.id);
   
@@ -182,10 +210,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  function letItSnow(snow){
-    snowContainer.style.opacity = snow;
-  }
-
 })
 
 // Draws the chart according to the member count
@@ -197,13 +221,6 @@ function changeChart(numbers){
     let rotationAngle = index * angleStep;
     number.style.transform = `rotate(${rotationAngle}deg)`;
   });
-}
-
-function changeMusic(audio, source, person){
-  source.src = "Music/" +person+".mp3";
-  // Load the new source
-  audio.load();
-  audio.play();
 }
   
 function changeImage(chosenPlayerImage, personName){
