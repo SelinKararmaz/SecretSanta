@@ -1,0 +1,12 @@
+{
+    "name": "SecretSanta",
+    "version": "1.0.0",
+    "description": "SecretSanta for the Kararmaz family",
+    "main": "app.js",
+    "scripts": {
+      "start": "nodemon app.js"
+    },
+    "dependencies": {
+    }
+}
+  

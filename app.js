@@ -40,15 +40,33 @@ io.on('connection', (socket) => {
     io.emit('updatePlayers', players); 
   });
 
-  socket.on('playerClicked', (playerSocketId, playerUsername) =>{
+  socket.on('playerClicked', (playerSocketId) =>{
+    console.log("player clicked");
     players[playerSocketId].clicked = true;
-    players[playerSocketId].username = playerUsername;
-    io.emit('updatePlayers', players);
-    io.emit('noteClickedPerson', playerSocketId);
+    io.emit('updatePlayers', players); // Change player list on front end
   })
   socket.on('assignPerson', (person, personToBeAssigned) =>{
+    console.log("person " + person);
     players[person].assignedPerson = personToBeAssigned;
+    
+    var assignedPlayerCount = 0;
+    for(var player of Object.keys(players)){
+      if(players[player].assignedPerson != 0){
+        assignedPlayerCount++;
+      }
+    }
+    if(assignedPlayerCount == 3){
+      console.log("last round");
+      io.emit('lastRound');
+    }
     io.emit('updatePlayers', players);
+  })
+
+  socket.on("nameChosen", (username)=>{
+    console.log(username);
+    players[socket.id].username = username;
+    io.emit('updatePlayers', players);
+    io.emit('newPlayer');
   })
 });
 
