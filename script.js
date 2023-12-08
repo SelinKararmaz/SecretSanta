@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
   let alper = document.querySelector('#alper');
   let keziban = document.querySelector('#keziban');
 
-  let family = [selin, yavuz, alper, keziban];
+  let family = {"selin":document.querySelector('#selin'), "yavuz":document.querySelector('#yavuz'),"alper":document.querySelector('#alper'),"keziban":document.querySelector('#keziban') };
 
   var audio = document.getElementById("music");
   var source = document.getElementById('musicSource');
@@ -62,18 +62,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Triggers spinWheel
   spinBtn.onclick = function(){ 
-    handleSpinButtonClick();
+    if(bottom == 0){
+      window.alert("Bazen bu hayatta beklemek gerekir");
+    }else handleSpinButtonClick();
   };
 
-  getWheelCoordinates();
+  setTimeout(getWheelCoordinates, 2000);
 
   // When updateWheel event is triggered, rotates wheel, 
   // Choses member, updates wheel
   socket.on('updateWheel', function(speed, factor) {
-    // Bottom is not calculated yet
-    if(bottom == 0){
-      return;
-    }
 
     // Rotate with given speed
     wheel.style.transform = "rotate(" + speed + "deg)";
@@ -83,15 +81,23 @@ document.addEventListener("DOMContentLoaded", function() {
     // When the spin is completed
     wheel.addEventListener('transitionend', function onTransitionEnd() {
     
-      for(var person of family){
+      for(var i of Object.keys(family)){
+        var person = family[i];
         var pos = person.getBoundingClientRect();
         console.log( pos.right + " " + pos.left + " " + pos.bottom + " " + pos.top + " " + person.id);
         // Gets the person that is position on top
-        if(Math.round(bottom) == Math.round(pos.bottom)){
+       // alert(Math.round(bottom)+" " + Math.round(pos.bottom));
+        if(Math.abs(Math.round(bottom) - Math.round(pos.bottom))<=1){
           for(var member of Object.keys(members)){
             // If the member clicked and has not been assigned to anyone, and didn't select herself/himself
-            if(members[member].clicked && members[member].assignedPerson == 0 && person.id!==members[member].username){
-              updateUI(person,member);
+            if(members[member].clicked && members[member].assignedPerson == 0){
+              console.log(person.id + " " + members[member].username);
+              if(person.id==members[member].username){
+                changeDialog("", dialogContainer);
+              }else{
+              //  alert(person.id);
+                updateUI(person,member);
+              }
             }
           }
           break;
@@ -104,17 +110,24 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     socket.on('lastRound', () =>{
+      console.log("last");
+      setTimeout(lastRound, 8000);
+    })
+
+    function lastRound(){
       for(var member of Object.keys(members)){
         if(members[member].assignedPerson==0){
+          console.log(members + " " + members[member] + " " + Object.keys(family).length);
           // Last person
-          updateUI(family[0],members[member]);
+          updateUI(family[Object.keys(family)[0]],member);
           // Change the screen later
         }
       }
-    })
+    }
 
     function updateUI(person, member){
       // Remove person from chart
+      delete family[person.id]; 
       person.remove();
       numbers = document.querySelectorAll('.number');
       
@@ -146,11 +159,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
   function handleSpinButtonClick() {
     if(Object.keys(members).length === 0){
-      window.alert('The number of players is not 4!');
+      window.alert('Kararmaz ailesinin 4 uyesi katilmali!');
     } else if(members[socket.id].assignedPerson !== 0){
-      window.alert('You already spinned the wheel!');
+      window.alert('Niye bir daha ceviriyorsun carki. Cikan kisiyi begenmedin mi?');
     } else if(spinning){
-      window.alert('Wheel is spinning!');
+      window.alert('Cark donuyor zaten!');
     } else {
       socket.emit("playerClicked", socket.id);
       socket.emit('spinWheel');
@@ -192,12 +205,10 @@ function changeDialog(person, dialogContainer){
   var dialog = " replace";
   if(person == "selin"){
     dialog = "Bu sitenin yapimcisini sectin. Sansli secim.";
-  }else if(person == "yavuz"){
-    dialog = "Yavuz'u sectin!!";
-  }else if(person == "alper"){
-    dialog = "Alper'i sectin!!";
+  }else if(person ==""){
+    dialog = "Oyuncu kendisini secti, bir daha dene!"
   }else{
-    dialog = "Keziban'i sectin!!";
+    dialog = person + " secildi!!";
   }
   dialogContainer.textContent = dialog;
 }
@@ -220,8 +231,7 @@ function getUserInput(){
   console.log("yes");
   let username = prompt('Please enter your name:').toLowerCase();
   while(!["selin","alper","yavuz","keziban"].includes(username)){
-    alert("Lutfen Kararmaz ailesinden bir uye sec");
-    username = "";
+    username = alert("Lutfen Kararmaz ailesinden bir uye sec");
   }
   return username;
 }
