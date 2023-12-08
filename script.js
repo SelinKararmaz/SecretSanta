@@ -1,9 +1,13 @@
 // Before the content is loaded
 const socket = io({ reconnection: false });
 
+// members joined
+let members = {};
+
+
 // Prompt user to enter name
 let username = getUserInput();
-console.log(username);
+
 socket.emit("nameChosen", username);
 
 
@@ -19,6 +23,15 @@ socket.on('reloadAllPages', () => {
 document.addEventListener("DOMContentLoaded", function() {
   let wheel = document.querySelector('.wheel');
   let spinBtn = document.querySelector('.spinBtn');
+  let candy = document.querySelector('.candy');
+  candy.addEventListener('mouseover', function() {
+    letItSnow(1);
+  });
+  candy.addEventListener('mouseout', function() {
+    console.log("yes");
+    letItSnow(0);
+  });
+
   // Players displayed on left
   let playerContainer = document.querySelector('.players');
   // Player that chart chooses
@@ -37,11 +50,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
   var audio = document.getElementById("music");
   var source = document.getElementById('musicSource');
+  let snowContainer = document.getElementById("fullPageDiv");
 
   var bottom = 0;
   var spinning = false;
-  // members joined
-  let members = {};
 
   // Initialize chart with 4 members
   changeChart(numbers);
@@ -170,6 +182,10 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
+  function letItSnow(snow){
+    snowContainer.style.opacity = snow;
+  }
+
 })
 
 // Draws the chart according to the member count
@@ -220,7 +236,7 @@ function updateText(textContainer, text){
 }
 
 function displayPlayers(playerContainer, members){
-  let text = "<h1>Current Players:</h1>";
+  let text = "<h1>Aile Uyeleri:</h1>";
   for(var member of Object.keys(members)){
     text += "<h2>" + members[member].username +"<h2>";
   }
@@ -228,10 +244,11 @@ function displayPlayers(playerContainer, members){
 }
 
 function getUserInput(){
-  console.log("yes");
-  let username = prompt('Please enter your name:').toLowerCase();
-  while(!["selin","alper","yavuz","keziban"].includes(username)){
-    username = alert("Lutfen Kararmaz ailesinden bir uye sec");
+  let username = "";
+  while(username==""){
+    username = prompt('Please enter your name:').toLowerCase();
+
+    if(!["selin","alper","yavuz","keziban"].includes(username)) alert("Lutfen Kararmaz ailesinden bir uye sec");
   }
   return username;
 }

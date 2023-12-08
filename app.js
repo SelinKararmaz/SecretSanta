@@ -63,7 +63,6 @@ io.on('connection', (socket) => {
   })
 
   socket.on("nameChosen", (username)=>{
-    console.log(username);
     players[socket.id].username = username;
     io.emit('updatePlayers', players);
     io.emit('newPlayer');
