@@ -4,6 +4,8 @@ import { colors, family} from './resources.js';
 const socket = io({ reconnection: false });
 let username = "";
 
+reloadPage();
+
 function choosePlayer(button) {
     if(username!="") return;
     
@@ -72,3 +74,10 @@ socket.on("playerDisconnected", function (disconnectedName) {
     }
 
 });
+
+function reloadPage(){
+    const waitTime = 2 * 60 * 1000;
+    setTimeout(function() {
+    location.reload(); 
+    }, waitTime);
+}

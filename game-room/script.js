@@ -1,4 +1,4 @@
-import { createButton, changeText, changeImage, changeMusic, graduallyPauseAudio, changePage} from '/utils.js';
+import { createButton, changeText, changeImage, changeMusic, graduallyPauseAudio, changePage, deleteImage} from '/utils.js';
 import { text, family} from '/resources.js';
 
 // Before the content is loaded
@@ -14,13 +14,9 @@ function assignPlayers(){
   socket.emit("assignPlayers")
 }
 
-
 document.addEventListener("DOMContentLoaded", function() {
   
   let candy = document.querySelector('.candy');
-
-  // Player that chart chooses
-  let chosenPlayerText = document.querySelector('.chosenPlayer');
   let chosenPlayerContainer= document.querySelector('.container');
   // Santa's dialog
   let dialogContainer = document.querySelector('.santaText');
@@ -28,6 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
   let audio = document.getElementById("music");
   let musicSource = document.getElementById('musicSource');
   let snowContainer = document.getElementById("fullPageDiv");
+  let audioImage = document.querySelector(".audioImage");
 
   displayButtons();
 
@@ -52,6 +49,11 @@ document.addEventListener("DOMContentLoaded", function() {
       changePage('/');
     }
     assignee = assignList[username].assignedTo;
+    if(assignee == null || assignee == ""){
+      console.log("time out");
+      changePage('/');
+    }
+    console.log(assignee);
     changeText(dialogContainer, text[assignee]);
     changeImage(chosenPlayerContainer, assignee.toLowerCase());
   })
@@ -71,11 +73,11 @@ document.addEventListener("DOMContentLoaded", function() {
     };
   }
   function choosePlayer(button){
-    changeImage(button, button.textContent);
     changeMusic(audio, musicSource, button.textContent);
+    changeImage(button, button.textContent);
   }
-  
 })
+
 
 function letItSnow(snow, snowContainer){
   snowContainer.style.opacity = snow;

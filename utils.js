@@ -33,6 +33,11 @@ export function changeImage(chosenPlayerContainer, personName){
     chosenPlayerContainer.style.backgroundSize = "cover";
 }
 
+export function deleteImage(chosenPlayerContainer){
+    chosenPlayerContainer.style.backgroundImage = "";
+}
+
+
 export function changeMusic(audio, musicSource, person){
     musicSource.src = "Music/" +person+".mp3";
     // Load the new source
@@ -45,15 +50,15 @@ export function getButtonColor(button){
 }
 
 export function graduallyPauseAudio(audio) {
-    var fadeOutInterval = setInterval(function() {
-        if (audio.volume > 0.1) {
-            audio.volume -= 0.1;  // decrease volume gradually
-        } else {
-            audio.volume = 0;
-            audio.pause();
-            audio.volume = 1;
-            clearInterval(fadeOutInterval);
-        }
-    }, 200);  // adjust the interval as needed
-  }
+var fadeOutInterval = setInterval(function() {
+    if (audio.volume > 0.1) {
+        audio.volume -= 0.1;  // decrease volume gradually
+    } else {
+        audio.volume = 0;
+        audio.pause();
+        audio.volume = 1;
+        clearInterval(fadeOutInterval);
+    }
+}, 200);  // adjust the interval as needed
+}
   
