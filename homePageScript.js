@@ -6,6 +6,13 @@ let username = "";
 
 reloadPage();
 
+document.addEventListener("mousemove", (e) => {
+    const cursor = document.getElementById("custom-cursor");
+    cursor.style.left = e.clientX + "px";
+    cursor.style.top = e.clientY + "px";
+});
+
+
 function choosePlayer(button) {
     if(username!="") return;
     
@@ -39,19 +46,19 @@ document.addEventListener("DOMContentLoaded", function () {
         return function () {
             button.style.backgroundImage = "url(game-room/Images/"+button.textContent.toLowerCase() +"-icon.jpg)";
             button.style.backgroundSize = "cover";
+            button.style.boxShadow = "0 0  20em rgba(255, 255, 255, 0.6)";
+            button.style.transition = "box-shadow 0.3s ease";
         };
     }
 
     function createButtonMouseOutHandler(button){
         return function () {
             deleteImage(button);
+            button.style.boxShadow = "";
         };
     }
 })
 
-function changeImage(text){
-    console.log(text);
-}
 
 function updateUI(playerList) {
     var chosenNames = 0;

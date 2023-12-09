@@ -5,6 +5,27 @@ body {
     align-items: center;
     height: 100vh;
     background-color: rgb(255, 152, 159);
+    cursor: none; /* Hide the default cursor */
+}
+
+#custom-cursor {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    pointer-events: none; /* Make sure the cursor doesn't interfere with underlying elements */
+    animation: shine 1s infinite alternate;
+}
+
+@keyframes shine {
+    0% {
+        box-shadow: 0 0 5px #fff;
+    }
+    100% {
+        box-shadow: 0 0 20px #fff, 0 0 50px #fff, 0 0 80px #fff;
+    }
 }
 
 button {
@@ -13,7 +34,7 @@ button {
     color: #fff;
     font-size: 2em;
     border: none;
-    cursor: pointer;
+    cursor: none;
     border-radius: 10%;
     transition: 0.5s ease-in-out;
     background-image: 2s ease;
