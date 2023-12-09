@@ -1,4 +1,4 @@
-import { changeButtonColor, createButton, getCountry, changePage} from './utils.js';
+import { changeButtonColor, createButton, getCountry, changePage,deleteImage} from './utils.js';
 import { colors, family} from './resources.js';
 
 const socket = io({ reconnection: false });
@@ -10,6 +10,7 @@ function choosePlayer(button) {
     if(username!="") return;
     
     changeButtonColor(button, colors.black);
+    deleteImage(button);
     button.disabled = true;
     username = button.textContent;
 
@@ -25,6 +26,8 @@ document.addEventListener("DOMContentLoaded", function () {
     for (var member of family) {
         var button = createButton(buttonContainer, member);
         button.addEventListener("click", createButtonClickHandler(button));
+        button.addEventListener("mouseover", createButtonMouseOverHandler(button));
+        button.addEventListener("mouseout", createButtonMouseOutHandler(button));
     }
 
     function createButtonClickHandler(button) {
@@ -32,7 +35,23 @@ document.addEventListener("DOMContentLoaded", function () {
             choosePlayer(button);
         };
     }
+    function createButtonMouseOverHandler(button) {
+        return function () {
+            button.style.backgroundImage = "url(game-room/Images/"+button.textContent.toLowerCase() +"-icon.jpg)";
+            button.style.backgroundSize = "cover";
+        };
+    }
+
+    function createButtonMouseOutHandler(button){
+        return function () {
+            deleteImage(button);
+        };
+    }
 })
+
+function changeImage(text){
+    console.log(text);
+}
 
 function updateUI(playerList) {
     var chosenNames = 0;
