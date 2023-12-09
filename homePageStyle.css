@@ -4,16 +4,23 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: rgb(255, 152, 159);
+    background-color: rgb(0, 25, 29);
+    background-repeat: no-repeat;
     cursor: none; /* Hide the default cursor */
 }
 
+.magnify-text {
+    display: inline-block;
+    font-size: 4em;
+    font-weight: bold; 
+    transition: transform 0.3s ease;
+}
 #custom-cursor {
     position: absolute;
     width: 30px;
     height: 30px;
     background-color: transparent;
-    border: 2px solid #fff;
+    border: 2px solid #fff9b3;
     border-radius: 50%;
     pointer-events: none; /* Make sure the cursor doesn't interfere with underlying elements */
     animation: shine 1s infinite alternate;
@@ -30,7 +37,7 @@ body {
 
 button {
     flex: 1;
-    background-color: #5ea197;
+    background-color: #3b6f68;
     color: #fff;
     font-size: 2em;
     border: none;
@@ -48,8 +55,4 @@ button {
 
 button:hover {
     transform: scale(1.1);
-}
-.optionsTitle{
-    color: #fff;
-    font-size: 3em;
 }
