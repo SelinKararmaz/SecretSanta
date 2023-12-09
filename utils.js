@@ -1,0 +1,24 @@
+export function changeButtonColor(button, color){
+    button.style.backgroundColor = color;
+}
+
+export function createButton(buttonContainer, name){
+    var button = document.createElement("button");
+    button.textContent = name;
+    button.id = name;
+    buttonContainer.appendChild(button);
+    return button;
+}
+
+export function getCountry() {
+    const userLanguage = navigator.language || navigator.userLanguage;
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    console.log('Language:', userLanguage);
+    console.log('Timezone:', userTimezone);
+}
+
+export function changePage(pathname){
+    window.location.pathname = pathname;
+}
+

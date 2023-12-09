@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-  	<script type="text/javascript" src="script.js"></script> 
+  	<script type="module" src="script.js"></script> 
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="style.css">
@@ -11,9 +11,6 @@
 <body>
 	<div id="fullPageDiv">
 	</div>
-	<div class="players">
-		<h1>Aile Uyeleri:</h1>
-	</div class>
 	<img class = "candy" src="Images/candy.png">
 	</div>
 	<div class="dialog">
@@ -27,13 +24,7 @@
 		Your browser does not support the audio element.
 	</audio>
 	<div class="container">
-		<div class="spinBtn">spin</div>
-		<div class="wheel">
-			<div class="number" id="selin" style="--i:1; --clr:#db7093"><span>Selin</span></div>
-			<div class="number" id="yavuz" style="--i:2; --clr:#db7093"><span>Yavuz</span></div>
-			<div class="number" id="alper" style="--i:3; --clr:#db7093"><span>Alper</span></div>
-			<div class="number" id="keziban" style="--i:4; --clr:#db7093"><span>Keziban</span></div>
-		</div>
+		<h1 class="chosenPerson"></h1>
 	</div> 
 
 </body>

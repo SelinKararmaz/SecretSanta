@@ -6,64 +6,89 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 
 var players = {};
+var playerNames = [];
+var shuffling = false;
 
 app.get('/', (req, res, next) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/homePage.html');
+});
+app.get('/game-room', (req, res, next) => {
+  res.sendFile(__dirname + '/game-room' + '/game.html');
 });
 
 app.use(express.static(__dirname));
 
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  players[socket.id] = ({username: null}, {assignedPerson: null});
 
-  players[socket.id] = {assignedPerson: 0, clicked: false, username: null};
+  // If player is joined late update ui
+  io.emit('updateJoinedList', players);
 
-  io.emit('updatePlayers', players);
-
-  // When user clicks on spin button spinWheel event is sent from socket
-  // spinWheel event triggers updateWheel on all clients
-  socket.on('spinWheel', () => {
-    io.emit('updateWheel', Math.ceil(Math.random() * 3600), Math.ceil(Math.random() * 3600));
-  });
-
-  // Handles reloadPage event
-  socket.on('reloadPage', () => {
-    io.emit('reloadAllPages'); // Broadcast to all connected clients
-  });
-
+  // Assign the name to player
+  socket.on('choosePlayer', function(playerId, playerName){
+    players[playerId].username = playerName;
+    io.emit('updateJoinedList', players);
+    playerNames.push(playerName);
+  }
+  );
   // Handles disconnect event
   socket.on('disconnect', () => {
+    console.log(socket.id + " " + players[socket.id].username);
+    // Updates the player list on both the front end and back end of
+    io.emit('playerDisconnected', players[socket.id].username); 
     // Removes the player from the players list when they disconnect
     delete players[socket.id];
-    // Updates the player list on both the front end and back end of
-    io.emit('updatePlayers', players); 
-  });
-
-  socket.on('playerClicked', (playerSocketId) =>{
-    console.log("player clicked");
-    players[playerSocketId].clicked = true;
-    io.emit('updatePlayers', players); // Change player list on front end
-  })
-  socket.on('assignPerson', (person, personToBeAssigned) =>{
-    console.log("person " + person);
-    players[person].assignedPerson = personToBeAssigned;
-    
-    var assignedPlayerCount = 0;
-    for(var player of Object.keys(players)){
-      if(players[player].assignedPerson != 0){
-        assignedPlayerCount++;
-      }
+    shuffling = false;
+  }); 
+  
+  socket.on('shufflePlayers',()=>{
+    if(!shuffling){
+      shuffling = true;
+      const shuffledPlayers = shuffle(playerNames);
+      const assignments = assignPlayers(shuffledPlayers);
+      io.emit('shufflingDone', assignments);
+      console.log(assignments);
     }
-    io.emit('updatePlayers', players);
   })
+  
 
-  socket.on("nameChosen", (username)=>{
-    players[socket.id].username = username;
-    io.emit('updatePlayers', players);
-    io.emit('newPlayer');
-  })
 });
+
+function assignPlayers(playersArray) {
+  const shuffledPlayers = shuffle(playersArray);
+  const assignments = [];
+
+  const assignedTo = new Set();
+
+  for (let i = 0; i < shuffledPlayers.length; i++) {
+    let assignedPlayer;
+
+    // Ensure no one is assigned to themselves or to someone already assigned
+    do {
+      assignedPlayer = shuffledPlayers[randomize(shuffledPlayers.length)];
+    } while (assignedPlayer === shuffledPlayers[i] || assignedTo.has(assignedPlayer));
+
+    assignments.push({ player: shuffledPlayers[i], assignedTo: assignedPlayer });
+    assignedTo.add(assignedPlayer);
+  }
+
+  return assignments;
+}
+
+function shuffle(array) {
+  // Fisher-Yates shuffle algorithm
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+function randomize(num){
+  return Math.floor(Math.random() * num);
+}
+
 
 server.listen(3000, () => {
   console.log('listening on *:3000');

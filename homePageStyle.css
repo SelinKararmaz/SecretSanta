@@ -1,0 +1,29 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+
+button {
+    flex: 1;
+    background-color: #3498db;
+    color: #fff;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    border-radius: 10%;
+    transition: 0.5s ease-in-out;
+}
+.buttons {
+    display: flex;
+    width: 80vw; 
+    height: 50vh; 
+    gap: 2em;
+}
+
+button:hover {
+    transform: scale(1.1);
+}
