@@ -26,7 +26,8 @@ export function changeText(textContainer, text){
     textContainer.textContent = text;
 }
 
-export function changeDialog(dialogContainer, dialog){
-    dialogContainer.textContent = dialog;
-}
   
+export function changeImage(chosenPlayerContainer, personName){
+    var path = "./Images/"+personName+".jpg";
+    chosenPlayerContainer.style.backgroundImage = "url("+path+")";
+}

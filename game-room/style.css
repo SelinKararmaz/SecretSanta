@@ -81,15 +81,12 @@ body{
 	animation: wiggle 0.5s ease-in-out infinite; 
 }
 .container{
-	position: relative;
-	margin-right: 5em;
-	width: 22em;
-	height: 22em;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	transition: transform 0.3s ease;
-	background-color: aquamarine;
+	width: 25em;
+	height: 25em;
+	border-radius: 10%;
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
 }
 .container:hover{
 	transform: scale(1.1);
@@ -99,4 +96,13 @@ body{
 audio{
 	position: absolute;
 	display: none;
+}
+
+.playerContainer{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 50%;
+	font-size: large;
 }

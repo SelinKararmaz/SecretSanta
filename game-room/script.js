@@ -1,4 +1,4 @@
-import {changePage, changeText, changeDialog} from '/utils.js';
+import {changePage, changeText, changeImage} from '/utils.js';
 import { text} from '/resources.js';
 
 // Before the content is loaded
@@ -24,11 +24,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Player that chart chooses
   let chosenPlayerText = document.querySelector('.chosenPlayer');
+  let chosenPlayerContainer= document.querySelector('.container');
   // Santa's dialog
   let dialogContainer = document.querySelector('.santaText');
 
-  var audio = document.getElementById("music");
-  var musicSource = document.getElementById('musicSource');
+  let audio = document.getElementById("music");
+  let musicSource = document.getElementById('musicSource');
   let snowContainer = document.getElementById("fullPageDiv");
 
   var bgMusic = false;
@@ -53,23 +54,13 @@ document.addEventListener("DOMContentLoaded", function() {
   // Displays players on front end
   socket.on('assigningDone', function(assignList) {
     assignee = assignList[username].assignedTo;
-    changeText(chosenPlayerText, assignee);
-    changeDialog(dialogContainer, text[assignee]);
+    changeText(dialogContainer, text[assignee]);
+    console.log(chosenPlayerContainer);
+    changeImage(chosenPlayerContainer, assignee.toLowerCase());
   })
   
 })
 
-
-  
-function changeImage(chosenPlayerImage, personName){
-  chosenPlayerImage.src = "Images/"+personName+".jpg";
-  console.log(chosenPlayerImage.src);
-  chosenPlayerImage.style.display = "block";
-  // Deletes image after 8 secs
-  setTimeout(function () {
-    chosenPlayerImage.style.display = "none";;
-  }, 8000); 
-}
 
 function updateText(textContainer, text){
   var newParagraph = document.createElement("h2");
