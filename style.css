@@ -94,12 +94,10 @@ body{
 	position: fixed; 
     left: 0;
 	bottom: 0;
-	padding-left: 3em;
+	padding-left: 5em;
 	padding-bottom: 2em; 
     width: 10em;
-	transition: transform 0.3s ease;
-	z-index: 999;
-	
+	transition: transform 0.3s ease;	
 }
 
 .candy:hover {

@@ -3,7 +3,7 @@ const socket = io({ reconnection: false });
 
 // members joined
 let members = {};
-
+let countDown = 1;
 
 // Prompt user to enter name
 let username = getUserInput();
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // When the spin is completed
     wheel.addEventListener('transitionend', function onTransitionEnd() {
-    
+      var turnCount = 0;
       for(var i of Object.keys(family)){
         var person = family[i];
         var pos = person.getBoundingClientRect();
@@ -133,6 +133,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if(members[member].clicked && members[member].assignedPerson == 0){
               console.log(person.id + " " + members[member].username);
               if(person.id==members[member].username){
+                turnCount=4;
                 changeDialog("", dialogContainer);
               }else{
               //  alert(person.id);
@@ -142,28 +143,19 @@ document.addEventListener("DOMContentLoaded", function() {
           }
           break;
         }
-
+        turnCount++;
       }
       spinning = false;
       wheel.removeEventListener('transitionend', onTransitionEnd);
       wheel.style.transition = '';
-    });
 
-    socket.on('lastRound', () =>{
-      console.log("last");
-      setTimeout(lastRound, 8000);
-    })
-
-    function lastRound(){
-      for(var member of Object.keys(members)){
-        if(members[member].assignedPerson==0){
-          console.log(members + " " + members[member] + " " + Object.keys(family).length);
-          // Last person
-          updateUI(family[Object.keys(family)[0]],member);
-          // Change the screen later
-        }
+      if(turnCount==4){
+        countDown--;
       }
-    }
+      if(countDown == 0){
+        socket.emit("reloadPage");
+      }
+    });
 
     function updateUI(person, member){
       // Remove person from chart
@@ -204,7 +196,8 @@ document.addEventListener("DOMContentLoaded", function() {
       window.alert('Niye bir daha ceviriyorsun carki. Cikan kisiyi begenmedin mi?');
     } else if(spinning){
       window.alert('Cark donuyor zaten!');
-    } else {
+    } 
+    else {
       socket.emit("playerClicked", socket.id);
       socket.emit('spinWheel');
     }

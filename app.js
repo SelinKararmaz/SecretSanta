@@ -55,10 +55,6 @@ io.on('connection', (socket) => {
         assignedPlayerCount++;
       }
     }
-    if(assignedPlayerCount == 3){
-      console.log("last round");
-      io.emit('lastRound');
-    }
     io.emit('updatePlayers', players);
   })
 
