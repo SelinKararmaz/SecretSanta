@@ -1,4 +1,5 @@
-import { changeButtonColor, createButton, getCountry, changePage} from '/utils.js';
+import {changePage, changeText, changeDialog} from '/utils.js';
+import { text} from '/resources.js';
 
 // Before the content is loaded
 const socket = io({ reconnection: false });
@@ -7,22 +8,24 @@ let username = sessionStorage.getItem('username');
 let assignee = "";
 
 socket.on('playerDisconnected',function(userName){
-  alert(userName + " disconnected");
+  alert("birisi oyundan cikti!");
   changePage("/");
 })
-socket.emit("shufflePlayers");
+setTimeout(assignPlayers,100);
+
+function assignPlayers(){
+  socket.emit("assignPlayers")
+}
+
+
 document.addEventListener("DOMContentLoaded", function() {
   
   let candy = document.querySelector('.candy');
 
   // Player that chart chooses
-  let chosenPlayerImage = document.querySelector('.chosenPlayer');
+  let chosenPlayerText = document.querySelector('.chosenPlayer');
   // Santa's dialog
   let dialogContainer = document.querySelector('.santaText');
-  // The family members on the chart
-  let numbers = document.querySelectorAll('.number');
-
-  let family = ["selin", "yavuz","alper","keziban" ];
 
   var audio = document.getElementById("music");
   var musicSource = document.getElementById('musicSource');
@@ -47,24 +50,13 @@ document.addEventListener("DOMContentLoaded", function() {
     audio.load();
     audio.play();
   }
-  
-  // Chosen member on the chart
-  let choosenPerson = null;
-  
   // Displays players on front end
-  socket.on('updatePlayers', function(players, newPlayer) {
-    members = players;
+  socket.on('assigningDone', function(assignList) {
+    assignee = assignList[username].assignedTo;
+    changeText(chosenPlayerText, assignee);
+    changeDialog(dialogContainer, text[assignee]);
   })
-
-  // Updates the players text
-  socket.on('newPlayer', function() {
-    console.log(members);
-    displayPlayers(playerContainer, members);
-  })
-
-
   
-
 })
 
 
@@ -77,19 +69,6 @@ function changeImage(chosenPlayerImage, personName){
   setTimeout(function () {
     chosenPlayerImage.style.display = "none";;
   }, 8000); 
-}
-
-function changeDialog(person, dialogContainer){
-  var newParagraph = document.createElement("h1");
-  var dialog = " replace";
-  if(person == "selin"){
-    dialog = "Bu sitenin yapimcisini sectin. Sansli secim.";
-  }else if(person ==""){
-    dialog = "Oyuncu kendisini secti, bir daha dene!"
-  }else{
-    dialog = person + " secildi!!";
-  }
-  dialogContainer.textContent = dialog;
 }
 
 function updateText(textContainer, text){

@@ -22,3 +22,11 @@ export function changePage(pathname){
     window.location.pathname = pathname;
 }
 
+export function changeText(textContainer, text){
+    textContainer.textContent = text;
+}
+
+export function changeDialog(dialogContainer, dialog){
+    dialogContainer.textContent = dialog;
+}
+  

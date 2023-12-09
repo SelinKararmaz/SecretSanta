@@ -34,7 +34,6 @@ io.on('connection', (socket) => {
   );
   // Handles disconnect event
   socket.on('disconnect', () => {
-    console.log(socket.id + " " + players[socket.id].username);
     // Updates the player list on both the front end and back end of
     io.emit('playerDisconnected', players[socket.id].username); 
     // Removes the player from the players list when they disconnect
@@ -42,22 +41,19 @@ io.on('connection', (socket) => {
     shuffling = false;
   }); 
   
-  socket.on('shufflePlayers',()=>{
+  socket.on('assignPlayers',()=>{
     if(!shuffling){
       shuffling = true;
       const shuffledPlayers = shuffle(playerNames);
-      const assignments = assignPlayers(shuffledPlayers);
-      io.emit('shufflingDone', assignments);
-      console.log(assignments);
+      var assignments = assignPlayers(shuffledPlayers);
+      io.emit('assigningDone', assignments);
     }
   })
-  
-
 });
 
 function assignPlayers(playersArray) {
   const shuffledPlayers = shuffle(playersArray);
-  const assignments = [];
+  const assignments = {};
 
   const assignedTo = new Set();
 
@@ -69,8 +65,8 @@ function assignPlayers(playersArray) {
       assignedPlayer = shuffledPlayers[randomize(shuffledPlayers.length)];
     } while (assignedPlayer === shuffledPlayers[i] || assignedTo.has(assignedPlayer));
 
-    assignments.push({ player: shuffledPlayers[i], assignedTo: assignedPlayer });
-    assignedTo.add(assignedPlayer);
+    assignments[shuffledPlayers[i]]  = {assignedTo: ""};
+    assignments[shuffledPlayers[i]].assignedTo = assignedPlayer;
   }
 
   return assignments;

@@ -1,5 +1,5 @@
 import { changeButtonColor, createButton, getCountry, changePage} from './utils.js';
-import { colors} from './colors.js';
+import { colors} from './resources.js';
 
 const socket = io({ reconnection: false });
 let family = ["Selin", "Alper", "Yavuz", "Keziban"];
@@ -51,7 +51,7 @@ function updateUI(playerList) {
 
         // Check if everyone chose names
         if(playerList[player].username != null) chosenNames++;
-        if(chosenNames == 3){
+        if(chosenNames == 2){
             sessionStorage.setItem('username', username);
             changePage("game-room");
         }
