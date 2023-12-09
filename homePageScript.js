@@ -1,8 +1,7 @@
 import { changeButtonColor, createButton, getCountry, changePage} from './utils.js';
-import { colors} from './resources.js';
+import { colors, family} from './resources.js';
 
 const socket = io({ reconnection: false });
-let family = ["Selin", "Alper", "Yavuz", "Keziban"];
 let username = "";
 
 function choosePlayer(button) {
@@ -51,7 +50,7 @@ function updateUI(playerList) {
 
         // Check if everyone chose names
         if(playerList[player].username != null) chosenNames++;
-        if(chosenNames == 3){
+        if(chosenNames == 2){
             sessionStorage.setItem('username', username);
             changePage("game-room");
         }
@@ -63,8 +62,13 @@ socket.on("updateJoinedList", function (players) {
 });
 
 socket.on("playerDisconnected", function (disconnectedName) {
+    console.log("player disconnected");
     var button = document.getElementById(disconnectedName);
-    changeButtonColor(button, colors.blue);
-    // For players who have not chosen the button, set disabled to false
-    button.disabled = false;
+    // if the player has chosen a button
+    if(button){
+        changeButtonColor(button, colors.blue);
+        // For players who have not chosen the button, set disabled to false
+        button.disabled = false;
+    }
+
 });

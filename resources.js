@@ -1,4 +1,6 @@
 
 export const colors = {grey:"#aaa", blue: "#3498db", black:"#000"};
 
-export const text = {Selin:"Bu sitenin yapimcisini sectin! Iyi secim", Yavuz:"Katla katla paralari", Alper:"Alper'i sectin!! Iyi sanslar.", Keziban:"Keziban'i sectin!! Temizlik esyasi alabilirsin belki?"}
+export const text = {Selin:"Selini sectin! Iyi secim.", Yavuz:"Yavuz'u sectin! Katla katla paralari", Alper:"Alper'i sectin!! Iyi sanslar.", Keziban:"Keziban'i sectin!! Temizlik esyasi alabilirsin belki?"}
+
+export const family = ["Selin", "Alper", "Yavuz", "Keziban"];
