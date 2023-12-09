@@ -5,8 +5,9 @@ body {
     align-items: center;
     height: 100vh;
     background-color: rgb(0, 25, 29);
-    background-repeat: no-repeat;
     cursor: none; /* Hide the default cursor */
+    background-image: url('/game-room/Images/homeBg.jpg');
+    background-size: cover;
 }
 
 .magnify-text {
@@ -37,7 +38,7 @@ body {
 
 button {
     flex: 1;
-    background-color: #3b6f68;
+    background-color: #43867d;
     color: #fff;
     font-size: 2em;
     border: none;

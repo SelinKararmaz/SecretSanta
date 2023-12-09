@@ -62,3 +62,7 @@ var fadeOutInterval = setInterval(function() {
 }, 200);  // adjust the interval as needed
 }
   
+
+export function addShadow(button, rgba, area){
+    button.style.boxShadow = "0 0 " +area+" " + rgba;
+}

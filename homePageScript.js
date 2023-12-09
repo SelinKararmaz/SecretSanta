@@ -1,4 +1,4 @@
-import { changeButtonColor, createButton, getCountry, changePage,deleteImage} from './utils.js';
+import { changeButtonColor, createButton, getCountry, changePage,deleteImage, addShadow} from './utils.js';
 import { colors, family} from './resources.js';
 
 const socket = io({ reconnection: false });
@@ -17,6 +17,7 @@ function choosePlayer(button) {
     if(username!="") return;
     
     changeButtonColor(button, colors.black);
+    addShadow(button, "rgba(255,255,255)", "3em")
     deleteImage(button);
     button.disabled = true;
     username = button.textContent;
@@ -46,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return function () {
             button.style.backgroundImage = "url(game-room/Images/"+button.textContent.toLowerCase() +"-icon.jpg)";
             button.style.backgroundSize = "cover";
-            button.style.boxShadow = "0 0 3em rgba(255,255,170)";
+            addShadow(button, "rgba(255,255,255)", "3em");
             button.style.transition = "box-shadow 0.3s ease";
         };
     }
@@ -54,7 +55,10 @@ document.addEventListener("DOMContentLoaded", function () {
     function createButtonMouseOutHandler(button){
         return function () {
             deleteImage(button);
-            button.style.boxShadow = "";
+            // User hasn't chosen box
+            if(button.textContent != username || username==""){
+                button.style.boxShadow = "";
+            }
         };
     }
     const magnifyTextElements = document.querySelectorAll('.magnify-text');
@@ -83,7 +87,7 @@ function updateUI(playerList) {
         // If it's not the player, the newly joined player's user name is null
         if (player != socket.id) {
             if(button){
-                changeButtonColor(button, colors.grey);
+                changeButtonColor(button, colors.black);
                 button.disabled = true;
             }
         }
