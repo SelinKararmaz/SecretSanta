@@ -1,4 +1,4 @@
-import {changePage, changeText, changeImage} from '/utils.js';
+import {changePage, changeText, changeImage, changeMusic} from '/utils.js';
 import { text} from '/resources.js';
 
 // Before the content is loaded
@@ -6,11 +6,8 @@ const socket = io({ reconnection: false });
 
 let username = sessionStorage.getItem('username');
 let assignee = "";
+let bgMusic = 0;
 
-socket.on('playerDisconnected',function(userName){
-  alert("birisi oyundan cikti!");
-  changePage("/");
-})
 setTimeout(assignPlayers,100);
 
 function assignPlayers(){
@@ -32,9 +29,6 @@ document.addEventListener("DOMContentLoaded", function() {
   let musicSource = document.getElementById('musicSource');
   let snowContainer = document.getElementById("fullPageDiv");
 
-  var bgMusic = false;
-
-
   candy.addEventListener('mouseover', function() {
     letItSnow(1, snowContainer);
   });
@@ -43,14 +37,12 @@ document.addEventListener("DOMContentLoaded", function() {
     graduallyPauseAudio(audio);
   });
   candy.addEventListener('click', function() {
-    if(bgMusic) changeMusic("eyvaheyvah");
+    if(bgMusic == 1) {
+      console.log("yes");
+      changeMusic(audio, musicSource, "eyvaheyvah");
+    }
   });
-  function changeMusic(person){
-    musicSource.src = "Music/" +person+".mp3";
-    // Load the new source
-    audio.load();
-    audio.play();
-  }
+
   // Displays players on front end
   socket.on('assigningDone', function(assignList) {
     assignee = assignList[username].assignedTo;

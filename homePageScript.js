@@ -51,7 +51,7 @@ function updateUI(playerList) {
 
         // Check if everyone chose names
         if(playerList[player].username != null) chosenNames++;
-        if(chosenNames == 2){
+        if(chosenNames == 3){
             sessionStorage.setItem('username', username);
             changePage("game-room");
         }

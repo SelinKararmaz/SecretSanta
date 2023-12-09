@@ -31,3 +31,10 @@ export function changeImage(chosenPlayerContainer, personName){
     var path = "./Images/"+personName+".jpg";
     chosenPlayerContainer.style.backgroundImage = "url("+path+")";
 }
+
+export function changeMusic(audio, musicSource, person){
+    musicSource.src = "Music/" +person+".mp3";
+    // Load the new source
+    audio.load();
+    audio.play();
+}
