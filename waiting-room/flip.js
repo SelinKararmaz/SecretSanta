@@ -9,7 +9,10 @@ setInterval(function() {
 addCustomCursor();
 
 var currentSlideNum = 1;
-var slideCount = 7;
+var imgContainer = document.querySelector('.imgContainer');
+
+var slideCount = imgContainer.querySelectorAll('div').length;
+console.log(slideCount);
 var color = '#fff';
 var shadowColor = "rgba(255, 255, 255, 0.8)";
 var timeoutId = "";
