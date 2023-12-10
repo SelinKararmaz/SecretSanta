@@ -32,14 +32,15 @@ function changeSlide(add){
         if(currentSlideNum >= slideCount-1){
             color='#400';
             shadowColor = "rgba(255, 0,0, 0.8)";
+            document.querySelector(".subtext").style.opacity=1;
         } 
         if(currentSlideNum < slideCount) currentSlideNum++;
         else{
             // When user goes back from game room they shouldn't be able to click on other slides
-            //changePage('/game-room');
             setTimeout(function () {
                 deleteAllPastSlides();
-            }, 1200);
+                changePage('/game-room');
+            }, 10000);
         } 
     }else{
         if(currentSlideNum != 0) currentSlideNum--;

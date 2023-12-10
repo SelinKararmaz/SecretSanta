@@ -13,6 +13,10 @@ function enterGameRoom() {
 
 
 document.addEventListener("DOMContentLoaded", function() {
+
+  const body = document.querySelector('body');
+  body.style.opacity = 1;
+
   
   let candy = document.querySelector('.candy');
   let chosenPlayerContainer= document.querySelector('.container');

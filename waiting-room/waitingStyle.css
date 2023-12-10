@@ -21,9 +21,13 @@ body{
     left:10%;
     width: 10em;
     height: 10em;
+    border-radius: 10%;
     background-image: url('Images/arrow1.png');
     background-color:black;
     background-size: cover;
     transition: transform 0.5s ease, box-shadow 1.2s ease, background-color 0.4s ease;
 }
 
+.subtext{
+    opacity: 0;
+}
