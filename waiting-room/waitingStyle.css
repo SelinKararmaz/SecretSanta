@@ -8,6 +8,7 @@ body{
     background: black;
     pointer-events: none;
     cursor: none;
+    background-image: url('/game-room/Images/homeBg.jpg');
 }
 
 #custom-cursor {
