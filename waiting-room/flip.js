@@ -1,17 +1,19 @@
 
-import {changePage} from '/utils.js';
+import {changePage,addCustomCursor} from '/utils.js';
 
 passMemory(1);
 setInterval(function() {
     passMemory(++currentSlideNum);
 }, 8000);
 
+addCustomCursor();
 
 var currentSlideNum = 1;
 var slideCount = 7;
 var color = '#fff';
 var shadowColor = "rgba(255, 255, 255, 0.8)";
 var timeoutId = "";
+var automaticFlip = "";
 
 document.addEventListener('keydown', function(event) {
     switch(event.key) {
@@ -20,6 +22,7 @@ document.addEventListener('keydown', function(event) {
     //     break;
       case 'ArrowRight':
         clearTimeout(timeoutId);
+        clearTimeout(automaticFlip);
         arrowClick();
         changeSlide(true);
         break;
@@ -37,7 +40,7 @@ function changeSlide(add){
         if(currentSlideNum < slideCount) currentSlideNum++;
         else{
             // When user goes back from game room they shouldn't be able to click on other slides
-            setTimeout(function () {
+            automaticFlip = setTimeout(function () {
                 deleteAllPastSlides();
                 changePage('/game-room');
             }, 10000);

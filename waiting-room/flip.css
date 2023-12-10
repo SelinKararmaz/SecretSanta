@@ -126,3 +126,8 @@ img{
 }
 
 .img{height: 370px;}
+
+.subtext{
+    position: fixed;
+    right: 1em;
+}

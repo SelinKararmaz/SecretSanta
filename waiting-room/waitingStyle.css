@@ -6,8 +6,28 @@ body{
     align-items: center;
     overflow: hidden;
     background: black;
+    pointer-events: none;
+    cursor: none;
 }
 
+#custom-cursor {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    border: 2px solid #000;
+    border-radius: 50%;
+    pointer-events: none; /* Make sure the cursor doesn't interfere with underlying elements */
+    animation: shine 1s infinite alternate;
+}
+@keyframes shine {
+    0% {
+        box-shadow: 0 0 5px #fff;
+    }
+    100% {
+        box-shadow: 0 0 20px #fff, 0 0 50px #fff, 0 0 80px #fff;
+    }
+}
 
 .title{
     position:fixed;

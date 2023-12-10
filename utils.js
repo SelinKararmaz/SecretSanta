@@ -66,3 +66,12 @@ var fadeOutInterval = setInterval(function() {
 export function addShadow(button, rgba, area){
     button.style.boxShadow = "0 0 " +area+" " + rgba;
 }
+
+export function addCustomCursor(cursor){
+    document.addEventListener("mousemove", (e) => {
+        const cursor = document.getElementById("custom-cursor");
+        cursor.style.left = e.clientX + "px";
+        cursor.style.top = e.clientY + "px";
+    });
+    
+}

@@ -1,4 +1,4 @@
-import { changeButtonColor, createButton, getCountry, changePage,deleteImage, addShadow} from './utils.js';
+import { changeButtonColor, createButton, getCountry, changePage,deleteImage, addShadow, addCustomCursor} from './utils.js';
 import { colors, family} from './resources.js';
 
 const socket = io({ reconnection: false });
@@ -6,11 +6,7 @@ let username = "";
 
 reloadPage();
 
-document.addEventListener("mousemove", (e) => {
-    const cursor = document.getElementById("custom-cursor");
-    cursor.style.left = e.clientX + "px";
-    cursor.style.top = e.clientY + "px";
-});
+addCustomCursor();
 
 socket.on('sendMessageToAll', function(senderName,message){
     if(username!=senderName){
@@ -143,3 +139,4 @@ function reloadPage(){
     location.reload(); 
     }, waitTime);
 }
+
