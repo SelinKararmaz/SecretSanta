@@ -1,14 +1,6 @@
 
 import {changePage} from '/utils.js';
 
-// Reload so that it resets the slides
-
-document.addEventListener('DOMContentLoaded', function () {
-    // Check the referrer and navigate to #slide_1 if coming from a different directory
-    if (document.referrer && document.referrer.indexOf("/game-room/") === -1) {
-      window.location= "#slider1";
-    }
-  });
 passMemory(1);
 setInterval(function() {
     passMemory(++currentSlideNum);
@@ -17,6 +9,9 @@ setInterval(function() {
 
 var currentSlideNum = 1;
 var slideCount = 7;
+var color = '#fff';
+var shadowColor = "rgba(255, 255, 255, 0.8)";
+var timeoutId = "";
 
 document.addEventListener('keydown', function(event) {
     switch(event.key) {
@@ -24,6 +19,8 @@ document.addEventListener('keydown', function(event) {
     //     changeSlide(false);
     //     break;
       case 'ArrowRight':
+        clearTimeout(timeoutId);
+        arrowClick();
         changeSlide(true);
         break;
     }
@@ -32,8 +29,18 @@ document.addEventListener('keydown', function(event) {
 
 function changeSlide(add){
     if(add){
+        if(currentSlideNum >= slideCount-1){
+            color='#400';
+            shadowColor = "rgba(255, 0,0, 0.8)";
+        } 
         if(currentSlideNum < slideCount) currentSlideNum++;
-        else changePage('/game-room');
+        else{
+            // When user goes back from game room they shouldn't be able to click on other slides
+            //changePage('/game-room');
+            setTimeout(function () {
+                deleteAllPastSlides();
+            }, 1200);
+        } 
     }else{
         if(currentSlideNum != 0) currentSlideNum--;
     }
@@ -57,7 +64,6 @@ function passMemory(buttonId) {
 
 function simulateClick(buttonId) {
     var button = document.getElementById(buttonId);
-    arrowClick();
     if (button) {
         currentSlideNum = button.id;
         var event = new MouseEvent('click', {
@@ -77,10 +83,25 @@ function makePastSlidesDissapear(index){
     }
 }
 
+function deleteAllPastSlides(){
+    // We want the first slide to stay
+    while(slideCount>=1){
+        deleteSlide('slide_'+slideCount);
+        slideCount--;
+    }
+}
+
+function deleteSlide(slideId){
+    var dissapearSlide = document.getElementById(slideId);
+    if(dissapearSlide){
+        console.log(dissapearSlide);
+    // Set the opacity to 0 to make it gradually disappear
+    dissapearSlide.remove();
+    }
+}
 
 function makeSlideDissapear(slideId){
     var dissapearSlide = document.getElementById(slideId);
-    console.log(dissapearSlide);
     if(dissapearSlide){
             // Add a CSS transition to the element
     dissapearSlide.style.transition = 'opacity 0.5s ease'; // You can adjust the duration and timing function
@@ -92,14 +113,15 @@ function makeSlideDissapear(slideId){
 
 
 function arrowClick(){
+    // Reset the button each time it is clicked
     var button = document.querySelector(".arrows");
     if (button) {
         console.log("yes");
         button.style.transform = 'scale(1.2)';
-        button.style.boxShadow = '0 0 20px rgba(255, 255, 255, 0.8)'; 
-        button.style.backgroundColor = '#fff'; 
+        button.style.boxShadow = '0 0 30px ' + shadowColor; 
+        button.style.backgroundColor = color; 
         
-        setTimeout(function () {
+        timeoutId = setTimeout(function () {
             button.style.transform = 'scale(1)';
             button.style.boxShadow = 'none';
             button.style.backgroundColor = '#000'; 

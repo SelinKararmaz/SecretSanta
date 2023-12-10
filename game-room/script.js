@@ -5,6 +5,13 @@ import { text, family} from '/resources.js';
 const socket = io({ reconnection: false });
 
 
+// When the user enters the game-room, push the state to the history
+function enterGameRoom() {
+  history.pushState({ page: 'game-room' }, null, '/game-room'); // Replace '/game-room' with the actual URL of your game-room
+  // Add code here to handle entering the game-room
+}
+
+
 document.addEventListener("DOMContentLoaded", function() {
   
   let candy = document.querySelector('.candy');
