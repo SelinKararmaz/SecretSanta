@@ -12,7 +12,11 @@ document.addEventListener("mousemove", (e) => {
     cursor.style.top = e.clientY + "px";
 });
 
-
+socket.on('sendMessageToAll', function(senderName,message){
+    if(username!=senderName){
+        alert(senderName + " size bir mesaj yolladi: " + message);
+    }
+})
 function choosePlayer(button) {
     if(username!="") return;
     
@@ -30,6 +34,16 @@ document.addEventListener("DOMContentLoaded", function () {
     getCountry();
 
     var buttonContainer = document.querySelector('.buttons');
+    var moon = document.querySelector('.moon');
+
+    moon.addEventListener("click", function() {
+        if(username==null || username==""){
+            alert("Once bir isim secmelisin");
+            return;
+        }
+        let message = prompt('Baskalarina ne soylemek istersin?').toLowerCase();
+        socket.emit("someoneMessaged",username, message);
+    });
 
     for (var member of family) {
         var button = createButton(buttonContainer, member);
@@ -94,12 +108,18 @@ function updateUI(playerList) {
 
         // Check if everyone chose names
         if(playerList[player].username != null) chosenNames++;
-        if(chosenNames == 2){
-            sessionStorage.setItem('username', username);
-            changePage("game-room");
+        console.log("wha " + chosenNames);
+        if(chosenNames == 4){
+            socket.emit('assignPlayers',4);
         }
     }
 }
+
+socket.on("assigningDone", (players)=>{
+    // Needs to be sent as session storage since the socket id changes when the page is changed
+    sessionStorage.setItem('assignedPerson', players[socket.id].assignedPerson);
+    changePage("game-room");
+})
 
 socket.on("updateJoinedList", function (players) {
     updateUI(players);

@@ -9,6 +9,15 @@ body {
     background-image: url('/game-room/Images/homeBg.jpg');
     background-size: cover;
 }
+.moon{
+    position: fixed;
+    background-color: rgb(251, 255, 194);
+    border-radius: 50%;
+    right: 1em;
+    top: 1em;
+    height: 5em;
+    width: 5em;
+}
 
 .magnify-text {
     display: inline-block;

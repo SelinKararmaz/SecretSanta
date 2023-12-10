@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  	<script type="module" src="./db.js"></script> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Cekilis Zamani</title>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        canvas {
+            border: 1px solid #000;
+        }
+        button {
+            margin-top: 10px;
+        }
+        .players{
+            position: fixed;
+            left: 0;
+            height: 100%;
+            width: 20%;
+            overflow: hidden;
+            background-color: aqua;
+            justify-content: center;
+            align-items: center;
+            
+        }
+        .image-container {
+            position: fixed;
+            left: 0;
+            height: 100%;
+            width: 20%;
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat;
+            background-color: antiquewhite; 
+        }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+    
+        
+
+    </style>
+</head>
+<body>
+    <canvas id="drawCanvas" width="800" height="600"></canvas>
+    <button id="saveButton">Save Drawing</button>
+    <div class="image-container"></div>
+    <script src="script.js"></script>
+
+</body>
+</html>

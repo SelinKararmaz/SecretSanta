@@ -7,7 +7,9 @@ const io = new Server(server);
 
 var players = {};
 var playerNames = [];
-var shuffling = false;
+// Number of players who sent the assign players message
+// Using boolean might cause sync issues, if two players send the true blue at the same time, it'll start two operations
+var playerSent = 0;
 
 app.get('/', (req, res, next) => {
   res.sendFile(__dirname + '/homePage.html');
@@ -15,12 +17,16 @@ app.get('/', (req, res, next) => {
 app.get('/game-room', (req, res, next) => {
   res.sendFile(__dirname + '/game-room' + '/game.html');
 });
+app.get('/waiting-room', (req, res, next) => {
+  res.sendFile(__dirname + '/waiting-room' + '/waitingRoom.html');
+});
+
 
 app.use(express.static(__dirname));
 
 
 io.on('connection', (socket) => {
-  players[socket.id] = ({username: null}, {assignedPerson: null});
+  players[socket.id] = ({username: null}, {assignedPerson: null}, {isAssigned:false});
 
   // If player is joined late update ui
   io.emit('updateJoinedList', players);
@@ -40,45 +46,50 @@ io.on('connection', (socket) => {
     delete players[socket.id];
     shuffling = false;
   }); 
+  socket.on('message', (message) => {
+    wss.clients.forEach((client) => {
+        if (client !== socket && client.readyState === WebSocket.OPEN) {
+            client.send(message);
+        }
+    });
+  });
+
+  socket.on("someoneMessaged", (senderName,message)=>{
+    io.emit("sendMessageToAll", senderName,message);
+  })
   
-  socket.on('assignPlayers',()=>{
-    if(!shuffling){
-      shuffling = true;
-      const shuffledPlayers = shuffle(playerNames);
-      var assignments = assignPlayers(shuffledPlayers);
-      io.emit('assigningDone', assignments);
+  socket.on('assignPlayers',(playerCount)=>{
+    playerSent++;
+    console.log(playerSent);
+    if(playerSent == playerCount){
+      assignPlayers();
+      console.log("yes");
+      io.emit('assigningDone', players);
+      playerSent=0;
     }
+  })
+
+  socket.on('drawingSaved',(url)=>{
+    io.emit('someoneDrew',url);
   })
 });
 
-function assignPlayers(playersArray) {
-  const shuffledPlayers = shuffle(playersArray);
-  const assignments = {};
-
-  const assignedTo = new Set();
-
-  for (let i = 0; i < shuffledPlayers.length; i++) {
-    let assignedPlayer;
-
-    // Ensure no one is assigned to themselves or to someone already assigned
-    do {
-      assignedPlayer = shuffledPlayers[randomize(shuffledPlayers.length)];
-    } while (assignedPlayer === shuffledPlayers[i] || assignedTo.has(assignedPlayer));
-
-    assignments[shuffledPlayers[i]]  = {assignedTo: ""};
-    assignments[shuffledPlayers[i]].assignedTo = assignedPlayer;
+function assignPlayers() {
+  var idList = Object.keys(players);
+  for(var playerId of idList){
+    var index = randomize(idList.length);
+    console.log(index + " " + idList[index]);
+    // While the assign id is not already assigned
+    while(idList[index] == playerId || players[idList[index]].isAssigned==true){
+      index = randomize(idList.length);
+      console.log(players[playerId].username +" " + index);
+      console.log(players[idList[index]]);
+    }
+    players[playerId].assignedPerson = players[idList[index]].username;
+    players[idList[index]].isAssigned = true;
   }
-
-  return assignments;
-}
-
-function shuffle(array) {
-  // Fisher-Yates shuffle algorithm
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
+  console.log(players);
+  return players;
 }
 
 function randomize(num){

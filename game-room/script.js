@@ -4,15 +4,6 @@ import { text, family} from '/resources.js';
 // Before the content is loaded
 const socket = io({ reconnection: false });
 
-let username = sessionStorage.getItem('username');
-let assignee = "";
-let bgMusic = 0;
-
-setTimeout(assignPlayers,200);
-
-function assignPlayers(){
-  socket.emit("assignPlayers")
-}
 
 document.addEventListener("DOMContentLoaded", function() {
   
@@ -25,14 +16,21 @@ document.addEventListener("DOMContentLoaded", function() {
   let musicSource = document.getElementById('musicSource');
   let snowContainer = document.getElementById("fullPageDiv");
   let audioImage = document.querySelector(".audioImage");
+  
+  let assignee = sessionStorage.getItem('assignedPerson');
+  let bgMusic = 0;
 
   displayButtons();
 
+
+  showAssignee(assignee);
+
+
   candy.addEventListener('mouseover', function() {
-    letItSnow(1, snowContainer);
+    letItSnow(1);
   });
   candy.addEventListener('mouseout', function() {
-    letItSnow(0, snowContainer);
+    letItSnow(0);
     graduallyPauseAudio(audio);
   });
   candy.addEventListener('click', function() {
@@ -42,21 +40,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
-  // Displays players on front end
-  socket.on('assigningDone', function(assignList) {
-    if(assignList[username] == null){
-      console.log("time out");
-      changePage('/');
-    }
-    assignee = assignList[username].assignedTo;
-    if(assignee == null || assignee == ""){
-      console.log("time out");
-      changePage('/');
-    }
-    console.log(assignee);
-    changeText(dialogContainer, text[assignee]);
-    changeImage(chosenPlayerContainer, assignee.toLowerCase());
-  })
   function displayButtons(){
     var buttonContainer = document.querySelector('.buttonContainer');
   
@@ -76,11 +59,17 @@ document.addEventListener("DOMContentLoaded", function() {
     changeMusic(audio, musicSource, button.textContent);
     changeImage(button, button.textContent);
   }
+  function showAssignee(assignee){
+    changeText(dialogContainer, text[assignee]);
+    changeImage(chosenPlayerContainer, assignee.toLowerCase());
+  }
+  function letItSnow(snow){
+    snowContainer.style.opacity = snow;
+    bgMusic = snow;
+  }
+  
 })
 
 
-function letItSnow(snow, snowContainer){
-  snowContainer.style.opacity = snow;
-  bgMusic = snow;
-}
+
 

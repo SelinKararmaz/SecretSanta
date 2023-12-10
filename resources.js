@@ -1,5 +1,5 @@
 
-export const colors = {grey:"#aaa", blue: "#3498db", black:"#000", red:"#f64e59", green: "#5ea197"};
+export const colors = {grey:"#aaa", blue: "#43867d", black:"#000", red:"#f64e59", green: "#5ea197"};
 
 export const text = {Selin:"Selini sectin! Iyi secim.", Yavuz:"Yavuz'u sectin! Katla katla paralari", Alper:"Alper'i sectin!! Iyi sanslar.", Keziban:"Keziban'i sectin!! Temizlik esyasi alabilirsin belki?"}
 
