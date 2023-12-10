@@ -21,6 +21,7 @@ app.get('/waiting-room', (req, res, next) => {
   res.sendFile(__dirname + '/waiting-room' + '/waiting.html');
 });
 
+app.use(express.static(__dirname + '/game-room'));
 app.use(express.static(__dirname + '/waiting-room'));
 app.use(express.static(__dirname));
 

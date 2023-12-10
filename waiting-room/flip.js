@@ -2,9 +2,9 @@
 import {changePage,addCustomCursor} from '/utils.js';
 
 passMemory(1);
-setInterval(function() {
+automaticFlip = setInterval(function() {
     passMemory(++currentSlideNum);
-}, 8000);
+}, 10000);
 
 addCustomCursor();
 
@@ -18,7 +18,7 @@ var shadowColor = "rgba(255, 255, 255, 0.8)";
 var timeoutId = "";
 var automaticFlip = "";
 var button = document.querySelector(".arrows");
-
+var slideChanging = false;
 document.addEventListener('keydown', function(event) {
     switch(event.key) {
     //   case 'ArrowLeft':
@@ -28,7 +28,14 @@ document.addEventListener('keydown', function(event) {
         clearTimeout(timeoutId);
         clearTimeout(automaticFlip);
         arrowClick();
-        changeSlide(true);
+        // To prevent Yavuz from button smashing
+        if(!slideChanging){
+            slideChanging = true;
+            setTimeout(function () {
+                slideChanging=false;
+            }, 200);
+            changeSlide(true);
+        }
         break;
     }
 });
@@ -42,19 +49,19 @@ function changeSlide(add){
             color='#400';
             shadowColor = "rgba(255, 0,0, 0.8)";
             document.querySelector(".subtext").style.opacity=1;
+            makePastSlidesDissapear(slideCount-1);
         } 
         if(currentSlideNum < slideCount) currentSlideNum++;
         else{
             // When user goes back from game room they shouldn't be able to click on other slides
-            automaticFlip = setTimeout(function () {
+            setTimeout(function () {
                 deleteAllPastSlides();
-                changePage('/game-room');
-            }, 10000);
+                history.pushState({}, null, "/game-room");
+                changePage("/game-room");
+            }, 4000);
         } 
-    }else{
-        if(currentSlideNum != 0) currentSlideNum--;
     }
-    console.log(currentSlideNum);
+    console.log("current " + currentSlideNum);
     simulateClick(currentSlideNum);
 }
 
@@ -104,7 +111,7 @@ function deleteAllPastSlides(){
 function deleteSlide(slideId){
     var dissapearSlide = document.getElementById(slideId);
     if(dissapearSlide){
-        console.log(dissapearSlide);
+        console.log("diss " + dissapearSlide);
     // Set the opacity to 0 to make it gradually disappear
     dissapearSlide.remove();
     }
