@@ -18,10 +18,10 @@ app.get('/game-room', (req, res, next) => {
   res.sendFile(__dirname + '/game-room' + '/game.html');
 });
 app.get('/waiting-room', (req, res, next) => {
-  res.sendFile(__dirname + '/waiting-room' + '/waitingRoom.html');
+  res.sendFile(__dirname + '/waiting-room' + '/waiting.html');
 });
 
-
+app.use(express.static(__dirname + '/waiting-room'));
 app.use(express.static(__dirname));
 
 

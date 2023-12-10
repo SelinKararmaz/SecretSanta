@@ -118,7 +118,7 @@ function updateUI(playerList) {
 socket.on("assigningDone", (players)=>{
     // Needs to be sent as session storage since the socket id changes when the page is changed
     sessionStorage.setItem('assignedPerson', players[socket.id].assignedPerson);
-    changePage("game-room");
+    changePage("waiting-room");
 })
 
 socket.on("updateJoinedList", function (players) {
