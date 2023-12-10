@@ -32,6 +32,7 @@ img{
     filter: saturate(10%) brightness(0.5); 
     transition: 0.7s;
     border-radius: 20px;
+    z-index: 999;
 }
 
 

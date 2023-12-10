@@ -19,6 +19,7 @@ body{
     border-radius: 50%;
     pointer-events: none; /* Make sure the cursor doesn't interfere with underlying elements */
     animation: shine 1s infinite alternate;
+    z-index: 2;
 }
 @keyframes shine {
     0% {

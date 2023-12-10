@@ -14,6 +14,7 @@ var color = '#fff';
 var shadowColor = "rgba(255, 255, 255, 0.8)";
 var timeoutId = "";
 var automaticFlip = "";
+var button = document.querySelector(".arrows");
 
 document.addEventListener('keydown', function(event) {
     switch(event.key) {
@@ -28,8 +29,10 @@ document.addEventListener('keydown', function(event) {
         break;
     }
 });
-
-
+button.addEventListener("click", function() {
+    alert("Div Clicked!");
+    // Add your custom logic here
+  });
 function changeSlide(add){
     if(add){
         if(currentSlideNum >= slideCount-1){
@@ -118,7 +121,6 @@ function makeSlideDissapear(slideId){
 
 function arrowClick(){
     // Reset the button each time it is clicked
-    var button = document.querySelector(".arrows");
     if (button) {
         console.log("yes");
         button.style.transform = 'scale(1.2)';
