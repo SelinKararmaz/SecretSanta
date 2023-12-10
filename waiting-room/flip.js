@@ -6,7 +6,7 @@ import {changePage} from '/utils.js';
 document.addEventListener('DOMContentLoaded', function () {
     // Check the referrer and navigate to #slide_1 if coming from a different directory
     if (document.referrer && document.referrer.indexOf("/game-room/") === -1) {
-      window.location= "#slide1";
+      window.location= "#slider1";
     }
   });
 passMemory(1);

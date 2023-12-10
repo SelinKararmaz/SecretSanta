@@ -72,34 +72,54 @@ io.on('connection', (socket) => {
   })
 });
 
+// function assignPlayers() {
+//   var idList = Object.keys(players);
+//   var assignedCount = 0;
+//   for(var playerId of idList){
+//     var index = randomize(idList.length);
+//     // While the assign id is not already assigned
+//     while(idList[index] == playerId || players[idList[index]].isAssigned==true){
+//       // For the rare case where the 3 members are assigned to different people and the 1 member is assigned to themselves
+//       if(assignedCount==playerNames.length-1 && idList[index] == playerId){
+//         cleanPlayers();
+//         assignPlayers();
+//       }
+//       index = randomize(idList.length);
+//     }
+//     players[playerId].assignedPerson = players[idList[index]].username;
+//     players[idList[index]].isAssigned = true;
+//     assignedCount++;
+//   }
+//   console.log(players);
+// }
+
+// function cleanPlayers(){
+//   for(var element of Object.keys(players)){
+//     players[element].isAssigned = false;
+//   }
+// }
+// function randomize(num){
+//   return Math.floor(Math.random() * num);
+// }
+
 function assignPlayers() {
-  var idList = Object.keys(players);
-  var assignedCount = 0;
-  for(var playerId of idList){
-    var index = randomize(idList.length);
-    // While the assign id is not already assigned
-    while(idList[index] == playerId || players[idList[index]].isAssigned==true){
-      // For the rare case where the 3 members are assigned to different people and the 1 member is assigned to themselves
-      if(assignedCount==playerNames.length-1 && idList[index] == playerId){
-        cleanPlayers();
-        assignPlayers();
-      }
-      index = randomize(idList.length);
-    }
-    players[playerId].assignedPerson = players[idList[index]].username;
-    players[idList[index]].isAssigned = true;
-    assignedCount++;
+  var userIds = Object.keys(players);
+  const randomList = shuffle(userIds);
+
+  for (let i = 0; i < userIds.length-1; i++) {
+    let assigneeId = randomList[i+1];
+    players[userIds[i]].assignedPerson = players[assigneeId].username;
   }
+  players[randomList[randomList.length-1]].assignedPerson = players[randomList[0]].username;
   console.log(players);
 }
 
-function cleanPlayers(){
-  for(var element in Object.keys(players)){
-    players[element].isAssigned = false;
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
   }
-}
-function randomize(num){
-  return Math.floor(Math.random() * num);
+  return array;
 }
 
 
