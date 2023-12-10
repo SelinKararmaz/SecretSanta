@@ -60,10 +60,8 @@ io.on('connection', (socket) => {
   
   socket.on('assignPlayers',(playerCount)=>{
     playerSent++;
-    console.log(playerSent);
     if(playerSent == playerCount){
       assignPlayers();
-      console.log("yes");
       io.emit('assigningDone', players);
       playerSent=0;
     }
@@ -76,22 +74,30 @@ io.on('connection', (socket) => {
 
 function assignPlayers() {
   var idList = Object.keys(players);
+  var assignedCount = 0;
   for(var playerId of idList){
     var index = randomize(idList.length);
-    console.log(index + " " + idList[index]);
     // While the assign id is not already assigned
     while(idList[index] == playerId || players[idList[index]].isAssigned==true){
+      // For the rare case where the 3 members are assigned to different people and the 1 member is assigned to themselves
+      if(assignedCount==playerNames.length-1 && idList[index] == playerId){
+        cleanPlayers();
+        assignPlayers();
+      }
       index = randomize(idList.length);
-      console.log(players[playerId].username +" " + index);
-      console.log(players[idList[index]]);
     }
     players[playerId].assignedPerson = players[idList[index]].username;
     players[idList[index]].isAssigned = true;
+    assignedCount++;
   }
   console.log(players);
-  return players;
 }
 
+function cleanPlayers(){
+  for(var element in Object.keys(players)){
+    players[element].isAssigned = false;
+  }
+}
 function randomize(num){
   return Math.floor(Math.random() * num);
 }
